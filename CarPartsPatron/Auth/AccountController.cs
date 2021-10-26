@@ -51,7 +51,7 @@ namespace CarPartsPatron.Auth
 
             await LoginToApp(userProfile);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Car");
         }
 
         public IActionResult Register()

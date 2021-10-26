@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CarPartsPatron.Models;
 using CarPartsPatron.Repositories;
+using System.Security.Claims;
+using System;
 
 namespace CarPartsPatron.Controllers
 {
@@ -13,7 +15,7 @@ namespace CarPartsPatron.Controllers
         }
         public ActionResult Index()
         {
-            var cars = _carRepository.GetAll();
+            var cars = _carRepository.GetAllCars();
             return View(cars);
         }
 
@@ -30,6 +32,7 @@ namespace CarPartsPatron.Controllers
         [HttpPost]
         public ActionResult Create(Car car)
         {
+            car.UserProfileId = GetCurrentUserProfileId();
             try
             {
                 _carRepository.Add(car);
@@ -37,7 +40,59 @@ namespace CarPartsPatron.Controllers
                 return RedirectToAction("Index");
             }
 
-            catch
+            catch (Exception ex)
+            {
+                return View(car);
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            Car car = _carRepository.GetCarById(id);
+
+            return View(car);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, Car car)
+        {
+            try
+            {
+                _carRepository.Delete(id);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(car);
+            }
+        }
+        public int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
+        public ActionResult Edit(int id)
+        {
+            Car car = _carRepository.GetCarById(id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            return View(car);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, Car car)
+        {
+            try
+            {
+                _carRepository.Update(car);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
             {
                 return View(car);
             }
