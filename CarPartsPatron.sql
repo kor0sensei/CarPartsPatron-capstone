@@ -1,4 +1,4 @@
-CREATE TABLE [UserProfile] (
+﻿CREATE TABLE [UserProfile] (
   [Id] int PRIMARY KEY NOT NULL IDENTITY(1, 1),
   [FireBaseUserId] nvarchar(255) NOT NULL,
   [Displayname] nvarchar(255) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE [Cars] (
   [Drivetrain] nvarchar(255),
   [Transmission] nvarchar(255),
   [Color] nvarchar(255),
-  [PhotoURL] nvarchar(255) NOT NULL
+  [PhotoUrl] nvarchar(255) NOT NULL
 
 )
 GO
@@ -29,7 +29,7 @@ CREATE TABLE [Parts] (
   [Brand] nvarchar(255),
   [PartType] nvarchar(255) NOT NULL,
   [Price] int NOT NULL,
-  [PhotoURL] nvarchar(255),
+  [PhotoUrl] nvarchar(255),
   [DateInstalled] nvarchar(255)
 
   CONSTRAINT [FK_Parts_Cars] FOREIGN KEY ([CarsId]) REFERENCES [Cars] ([Id]) ON DELETE CASCADE
