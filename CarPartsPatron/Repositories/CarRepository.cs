@@ -14,7 +14,7 @@ namespace CarPartsPatron.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, Manufacturer, Model, Submodel, Engine, Drivetrain, Transmission, Color, PhotoUrl FROM Cars";
+                    cmd.CommandText = "SELECT id, Manufacturer, Model, Submodel, Engine, Drivetrain, Transmission, Color, PhotoUrl FROM Car";
                     var reader = cmd.ExecuteReader();
 
                     var cars = new List<Car>();
@@ -49,10 +49,10 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT Cars.Id, Cars.UserProfileId, Cars.Manufacturer, Cars.Model, Cars.Submodel, Engine, Drivetrain, Transmission, Color, PhotoUrl 
-                       FROM Cars
-                       LEFT JOIN UserProfile ON Cars.UserProfileId = UserProfile.id
-                       WHERE Cars.id = @id";
+                       SELECT Car.Id, Car.UserProfileId, Manufacturer, Model, Submodel, Engine, Drivetrain, Transmission, Color, PhotoUrl 
+                       FROM Car
+                       LEFT JOIN UserProfile ON Car.UserProfileId = UserProfile.id
+                       WHERE Car.id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
                     var reader = cmd.ExecuteReader();
@@ -93,7 +93,7 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Cars (UserProfileId, Manufacturer, Model, Submodel, Engine, DriveTrain, Transmission, Color, PhotoUrl)
+                        INSERT INTO Car (UserProfileId, Manufacturer, Model, Submodel, Engine, DriveTrain, Transmission, Color, PhotoUrl)
                         OUTPUT INSERTED.ID
                         VALUES (@userProfileId, @manufacturer, @model, @subModel, @engine, @drivetrain, @transmission, @color, @photoUrl) ;";
 
@@ -122,7 +122,7 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            DELETE FROM Cars
+                            DELETE FROM Car
                             WHERE Id = @id
                         ";
 
@@ -141,7 +141,7 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE Cars
+                            UPDATE Car
                             SET 
                                 Manufacturer = @manufacturer,
                                 Model = @model,

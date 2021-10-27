@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 
-namespace TabloidMVC.Utils
+namespace CarPartsPatron.Utils
 {
     public static class DbUtils
     {
