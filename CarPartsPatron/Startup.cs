@@ -24,6 +24,7 @@ namespace CarPartsPatron
         {
             services.AddHttpClient();
             services.AddTransient<ICarRepository, CarRepository>();
+            services.AddTransient<IPartRepository, PartRepository>();
             services.AddTransient<IFirebaseAuthService, FirebaseAuthService>(); //added as dependency to be injected into any model 
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
 
