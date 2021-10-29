@@ -15,7 +15,8 @@ namespace CarPartsPatron.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, CarId, Brand, PartType, Price, PhotoUrl, DateInstalled FROM Part";
+                    cmd.CommandText = @"SELECT Part.id, CarId, Brand, PartType, Price, Part.PhotoUrl, DateInstalled, Car.Model FROM Part
+                    JOIN Car ON Part.CarId = Car.Id";
                     var reader = cmd.ExecuteReader();
 
                     var parts = new List<Part>();
@@ -28,9 +29,13 @@ namespace CarPartsPatron.Repositories
                             CarId = reader.GetInt32(reader.GetOrdinal("CarId")),
                             Brand = reader.GetString(reader.GetOrdinal("Brand")),
                             PartType = reader.GetString(reader.GetOrdinal("PartType")),
-                            Price = reader.GetInt32(reader.GetOrdinal("Price")),
-                            PhotoUrl = reader.GetString(reader.GetOrdinal("PhotoUrl")),
-                            DateInstalled = reader.GetDateTime(reader.GetOrdinal("DateInstalled"))
+                            Price = DbUtils.GetNullableInt(reader,"Price"),
+                            PhotoUrl = DbUtils.GetNullableString(reader,"PhotoUrl"),
+                            DateInstalled = DbUtils.GetNullableDateTime(reader,"DateInstalled"),
+                            Car = new Car
+                            {
+                                Model = reader.GetString(reader.GetOrdinal("Model"))
+                            }
                         });
                     }
 
@@ -48,10 +53,11 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT Part.Id, Part.CarId, Brand, PartType, Price, Part.PhotoUrl, DateInstalled
+                       SELECT Part.Id, CarId, Brand, PartType, Price, Part.PhotoUrl, DateInstalled
                        FROM Part
-                       LEFT JOIN Car ON Part.CarId = Car.id
-                       WHERE Part.id = @id";
+                       LEFT JOIN Car 
+                       ON Part.CarId = Car.id
+                       WHERE CarId = Car.Id";
 
                     cmd.Parameters.AddWithValue("@id", id);
                     var reader = cmd.ExecuteReader();
@@ -64,10 +70,18 @@ namespace CarPartsPatron.Repositories
                             CarId = reader.GetInt32(reader.GetOrdinal("CarId")),
                             Brand = reader.GetString(reader.GetOrdinal("Brand")),
                             PartType = reader.GetString(reader.GetOrdinal("PartType")),
-                            Price = reader.GetInt32(reader.GetOrdinal("Price")),
-                            PhotoUrl = reader.GetString(reader.GetOrdinal("PhotoUrl")),
-                            DateInstalled = reader.GetDateTime(reader.GetOrdinal("DateInstalled")),
+                            Price = DbUtils.GetNullableInt(reader,"Price"),
+                            PhotoUrl = DbUtils.GetNullableString(reader,("PhotoUrl")),
+                            DateInstalled = DbUtils.GetNullableDateTime(reader, "DateInstalled"),
                         };
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("CarId")))
+                        {
+                            part.Car = new Car
+                            {
+                                Model = reader.GetString(reader.GetOrdinal("Car Model"))
+                            };
+                        }
 
 
                         reader.Close();
@@ -91,13 +105,13 @@ namespace CarPartsPatron.Repositories
                     cmd.CommandText = @"
                         INSERT INTO Part (CarId, Brand, PartType, Price, DateInstalled, PhotoUrl)
                         OUTPUT INSERTED.ID
-                        VALUES (@carId, @brand, @partType, @price, @dateInstalled, @photoUrl) ;";
+                        VALUES (@carId, @brand, @partType, @price, @dateInstalled, @photoUrl)";
 
                     cmd.Parameters.AddWithValue("@carId", part.CarId);
-                    cmd.Parameters.AddWithValue("@brand", DbUtils.ValueOrDBNull(part.Brand));
+                    cmd.Parameters.AddWithValue("@brand", part.Brand);
                     cmd.Parameters.AddWithValue("@partType", part.PartType);
                     cmd.Parameters.AddWithValue("@price", DbUtils.ValueOrDBNull(part.Price));
-                    cmd.Parameters.AddWithValue("@photoUrl", part.PhotoUrl);
+                    cmd.Parameters.AddWithValue("@photoUrl", DbUtils.ValueOrDBNull(part.PhotoUrl));
                     cmd.Parameters.AddWithValue("@dateinstalled", DbUtils.ValueOrDBNull(part.DateInstalled));
                     ;
 
@@ -147,9 +161,9 @@ namespace CarPartsPatron.Repositories
                     cmd.Parameters.AddWithValue("@carId", part.CarId);
                     cmd.Parameters.AddWithValue("@brand", part.Brand);
                     cmd.Parameters.AddWithValue("@partType", part.PartType);
-                    cmd.Parameters.AddWithValue("@price", part.Price);
-                    cmd.Parameters.AddWithValue("@photoUrl", part.PhotoUrl);
-                    cmd.Parameters.AddWithValue("@dateInstalled",part.DateInstalled);
+                    cmd.Parameters.AddWithValue("@price", DbUtils.ValueOrDBNull(part.Price));
+                    cmd.Parameters.AddWithValue("@photoUrl", DbUtils.ValueOrDBNull(part.PhotoUrl));
+                    cmd.Parameters.AddWithValue("@dateInstalled", DbUtils.ValueOrDBNull(part.DateInstalled));
                     cmd.Parameters.AddWithValue("@id", part.Id);
                     cmd.ExecuteNonQuery();
                 }

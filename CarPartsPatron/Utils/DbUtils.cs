@@ -29,5 +29,14 @@ namespace CarPartsPatron.Utils
         {
             return value ?? DBNull.Value;
         }
+        public static int? GetNullableInt(SqlDataReader reader, string column)
+        {
+            var ordinal = reader.GetOrdinal(column);
+            if (reader.IsDBNull(ordinal))
+            {
+                return null;
+            }
+            return reader.GetInt32(ordinal);
+        }
     }
 }
