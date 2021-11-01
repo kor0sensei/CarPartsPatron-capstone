@@ -7,6 +7,7 @@ namespace CarPartsPatron.Repositories
     public interface ICarRepository
     {
         List<Car> GetAllCars();
+        List<Car> GetAllUserCars(int id);
         Car GetCarById(int id);
         void Add(Car car);
         void Update(Car car);

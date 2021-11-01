@@ -15,7 +15,9 @@ namespace CarPartsPatron.Controllers
         }
         public ActionResult Index()
         {
-            var cars = _carRepository.GetAllCars();
+            int userProfileId = GetCurrentUserProfileId();
+            var cars = _carRepository.GetAllUserCars(userProfileId);
+
             return View(cars);
         }
 

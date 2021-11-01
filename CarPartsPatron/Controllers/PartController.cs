@@ -15,7 +15,9 @@ namespace CarPartsPatron.Controllers
         }
         public ActionResult Index()
         {
-            var parts = _partRepository.GetAllParts();
+            int userProfileId = GetCurrentUserProfileId();
+            var parts = _partRepository.GetAllUserParts(userProfileId);
+
             return View(parts);
         }
         public ActionResult Create()
@@ -83,6 +85,11 @@ namespace CarPartsPatron.Controllers
             {
                 return View(part);
             }
+        }
+        public int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
