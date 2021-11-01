@@ -3,15 +3,18 @@ using CarPartsPatron.Models;
 using CarPartsPatron.Repositories;
 using System.Security.Claims;
 using System;
+using CarPartsPatron.Models.ViewModels;
 
 namespace CarPartsPatron.Controllers
 {
     public class PartSetupController : Controller
     {
         private readonly IPartSetupRepository _partSetupRepository;
-        public PartSetupController(IPartSetupRepository partSetupRepository)
+        private readonly IPartRepository _partRepository;
+        public PartSetupController(IPartSetupRepository partSetupRepository, IPartRepository partRepository)
         {
             _partSetupRepository = partSetupRepository;
+            _partRepository = partRepository;
         }
         public ActionResult Index()
         {
@@ -20,7 +23,12 @@ namespace CarPartsPatron.Controllers
         }
         public ActionResult Create()
         {
-            return View();
+            var parts = _partRepository.GetAllParts();
+            var vm = new PartSetupCreateViewModel
+            {
+                PartOptions = parts
+            };
+            return View(vm);
         }
 
         [HttpPost]

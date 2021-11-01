@@ -15,7 +15,8 @@ namespace CarPartsPatron.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, PartId, SetupNote, CreateDateTime FROM PartSetup";
+                    cmd.CommandText = @"SELECT PartSetup.id, PartId, SetupNote, CreateDateTime, Part.PartType FROM PartSetup 
+                                       JOIN Part ON PartSetup.PartId = Part.Id";
                     var reader = cmd.ExecuteReader();
 
                     var partSetups = new List<PartSetup>();
@@ -28,10 +29,10 @@ namespace CarPartsPatron.Repositories
                             PartId = reader.GetInt32(reader.GetOrdinal("partId")),
                             SetupNote = reader.GetString(reader.GetOrdinal("SetupNote")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                            //Part = new Part
-                            //{
-                            //    PartType = reader.GetString(reader.GetOrdinal("PartType"))
-                            //}
+                            Part = new Part
+                            {
+                                PartType = reader.GetString(reader.GetOrdinal("PartType"))
+                            }
                         });
                     }
 
@@ -49,7 +50,7 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT PartSetup.Id, PartId, SetupNote, CreateDateTime
+                       SELECT PartSetup.Id, PartId, SetupNote, CreateDateTime, Part.PartType
                        FROM PartSetup
                        LEFT JOIN Part 
                        ON PartSetup.PartId = Part.id
@@ -71,7 +72,7 @@ namespace CarPartsPatron.Repositories
                         {
                             partSetup.Part = new Part
                             {
-                                PartType = reader.GetString(reader.GetOrdinal("Part Type"))
+                                PartType = reader.GetString(reader.GetOrdinal("PartType"))
                             };
                         }
 
@@ -120,13 +121,11 @@ namespace CarPartsPatron.Repositories
                             UPDATE PartSetup
                             SET 
                                 PartId = @partId,
-                                SetupNote = @setupNote,
-                                CreateDateTime = @createDateTime
+                                SetupNote = @setupNote
                             WHERE Id = @id";
 
-                    cmd.Parameters.AddWithValue("@carId", partSetup.PartId);
+                    cmd.Parameters.AddWithValue("@partId", partSetup.PartId);
                     cmd.Parameters.AddWithValue("@setupNote", partSetup.SetupNote);
-                    cmd.Parameters.AddWithValue("@createDateTime", partSetup.CreateDateTime);
                     cmd.Parameters.AddWithValue("@id", partSetup.Id);
                     cmd.ExecuteNonQuery();
                 }

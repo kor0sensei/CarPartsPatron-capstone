@@ -7,13 +7,13 @@
 <h1>Your Setups</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add a Setup to a Part</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PartId)
+                @Html.DisplayNameFor(model => model.Part.PartType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.SetupNote)
@@ -28,7 +28,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PartId)
+                @Html.DisplayFor(modelItem => item.Part.PartType)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SetupNote)

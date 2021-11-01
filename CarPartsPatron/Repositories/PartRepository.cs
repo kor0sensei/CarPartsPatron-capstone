@@ -53,7 +53,7 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT Part.Id, CarId, Brand, PartType, Price, Part.PhotoUrl, DateInstalled
+                       SELECT Part.Id, CarId, Brand, PartType, Price, Part.PhotoUrl, DateInstalled, Car.Model
                        FROM Part
                        LEFT JOIN Car 
                        ON Part.CarId = Car.id
@@ -79,7 +79,7 @@ namespace CarPartsPatron.Repositories
                         {
                             part.Car = new Car
                             {
-                                Model = reader.GetString(reader.GetOrdinal("Car Model"))
+                                Model = reader.GetString(reader.GetOrdinal("Model"))
                             };
                         }
 
