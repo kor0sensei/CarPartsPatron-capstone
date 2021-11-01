@@ -41,6 +41,45 @@ namespace CarPartsPatron.Repositories
                 }
             }
         }
+        public List<Car> GetAllUserCars(int userProfileId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT Car.id, Manufacturer, Model, Submodel, Engine, Drivetrain, Transmission, Color, PhotoUrl 
+                                      FROM Car 
+                                      JOIN UserProfile ON UserProfileId = UserProfile.id
+                                      WHERE Car.UserProfileId = @userProfileId";
+
+                    cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
+                    var reader = cmd.ExecuteReader();
+
+                    var cars = new List<Car>();
+
+                    while (reader.Read())
+                    {
+                        cars.Add(new Car()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Manufacturer = reader.GetString(reader.GetOrdinal("Manufacturer")),
+                            Model = reader.GetString(reader.GetOrdinal("Model")),
+                            Submodel = reader.GetString(reader.GetOrdinal("Submodel")),
+                            Engine = reader.GetString(reader.GetOrdinal("Engine")),
+                            Drivetrain = reader.GetString(reader.GetOrdinal("Drivetrain")),
+                            Transmission = reader.GetString(reader.GetOrdinal("Transmission")),
+                            Color = reader.GetString(reader.GetOrdinal("Color")),
+                            PhotoUrl = reader.GetString(reader.GetOrdinal("PhotoUrl")),
+                        });
+                    }
+
+                    reader.Close();
+
+                    return cars;
+                }
+            }
+        }
         public Car GetCarById(int id)
         {
             using (var conn = Connection)

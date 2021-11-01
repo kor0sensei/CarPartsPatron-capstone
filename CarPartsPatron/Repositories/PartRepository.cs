@@ -45,6 +45,48 @@ namespace CarPartsPatron.Repositories
                 }
             }
         }
+        public List<Part> GetAllUserParts(int userProfileId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT Part.id, CarId, Brand, PartType, Price, Part.PhotoUrl, DateInstalled, Car.Model, Car.UserProfileId
+                                      FROM Part
+                                      JOIN Car ON Part.CarId = Car.Id
+                                      JOIN UserProfile ON UserProfileId = UserProfile.id
+                                      WHERE Car.UserProfileId = @userProfileId";
+
+                                      cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
+                    var reader = cmd.ExecuteReader();
+
+                    var parts = new List<Part>();
+
+                    while (reader.Read())
+                    {
+                        parts.Add(new Part()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            CarId = reader.GetInt32(reader.GetOrdinal("CarId")),
+                            Brand = reader.GetString(reader.GetOrdinal("Brand")),
+                            PartType = reader.GetString(reader.GetOrdinal("PartType")),
+                            Price = DbUtils.GetNullableInt(reader, "Price"),
+                            PhotoUrl = DbUtils.GetNullableString(reader, "PhotoUrl"),
+                            DateInstalled = DbUtils.GetNullableDateTime(reader, "DateInstalled"),
+                            Car = new Car
+                            {
+                                Model = reader.GetString(reader.GetOrdinal("Model"))
+                            }
+                        });
+                    }
+
+                    reader.Close();
+
+                    return parts;
+                }
+            }
+        }
         public Part GetPartById(int id)
         {
             using (var conn = Connection)

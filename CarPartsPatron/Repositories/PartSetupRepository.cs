@@ -42,6 +42,46 @@ namespace CarPartsPatron.Repositories
                 }
             }
         }
+        public List<PartSetup> GetAllUserPartSetups(int userProfileId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT PartSetup.id, PartId, SetupNote, CreateDateTime, Part.PartType, Car.UserProfileId
+                                      FROM PartSetup 
+                                      JOIN Part ON PartSetup.PartId = Part.Id
+                                      JOIN Car ON Part.CarId = Car.Id
+                                      JOIN UserProfile ON UserProfileId = UserProfile.id
+                                      WHERE Car.UserProfileId = @userProfileId";
+
+                    cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
+                    var reader = cmd.ExecuteReader();
+
+                    var partSetups = new List<PartSetup>();
+
+                    while (reader.Read())
+                    {
+                        partSetups.Add(new PartSetup()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            PartId = reader.GetInt32(reader.GetOrdinal("partId")),
+                            SetupNote = reader.GetString(reader.GetOrdinal("SetupNote")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            Part = new Part
+                            {
+                                PartType = reader.GetString(reader.GetOrdinal("PartType"))
+                            }
+                        });
+                    }
+
+                    reader.Close();
+
+                    return partSetups;
+                }
+            }
+        }
         public PartSetup GetPartSetupById(int id)
         {
             using (var conn = Connection)

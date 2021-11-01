@@ -18,8 +18,10 @@ namespace CarPartsPatron.Controllers
         }
         public ActionResult Index()
         {
-            var partSetups = _partSetupRepository.GetAllPartSetups();
-            return View(partSetups);
+            int userProfileId = GetCurrentUserProfileId();
+            var parts = _partSetupRepository.GetAllUserPartSetups(userProfileId);
+
+            return View(parts);
         }
         public ActionResult Create()
         {
@@ -91,6 +93,11 @@ namespace CarPartsPatron.Controllers
             {
                 return View(partSetup);
             }
+        }
+        public int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
