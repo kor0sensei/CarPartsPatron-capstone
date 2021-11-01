@@ -50,7 +50,7 @@ namespace CarPartsPatron.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT PartSetup.Id, PartId, SetupNote, CreateDateTime
+                       SELECT PartSetup.Id, PartId, SetupNote, CreateDateTime, Part.PartType
                        FROM PartSetup
                        LEFT JOIN Part 
                        ON PartSetup.PartId = Part.id
@@ -121,13 +121,11 @@ namespace CarPartsPatron.Repositories
                             UPDATE PartSetup
                             SET 
                                 PartId = @partId,
-                                SetupNote = @setupNote,
-                                CreateDateTime = @createDateTime
+                                SetupNote = @setupNote
                             WHERE Id = @id";
 
-                    cmd.Parameters.AddWithValue("@carId", partSetup.PartId);
+                    cmd.Parameters.AddWithValue("@partId", partSetup.PartId);
                     cmd.Parameters.AddWithValue("@setupNote", partSetup.SetupNote);
-                    cmd.Parameters.AddWithValue("@createDateTime", partSetup.CreateDateTime);
                     cmd.Parameters.AddWithValue("@id", partSetup.Id);
                     cmd.ExecuteNonQuery();
                 }
