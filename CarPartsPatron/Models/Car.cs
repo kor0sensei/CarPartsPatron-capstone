@@ -24,7 +24,6 @@ namespace CarPartsPatron.Models
         public string Drivetrain { get; set; }
         public string Transmission { get; set; }
         public string Color { get; set; }
-        [Required] 
         public string PhotoUrl { get; set; }
     }
 }

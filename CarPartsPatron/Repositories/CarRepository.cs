@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using CarPartsPatron.Models;
+using CarPartsPatron.Utils;
 
 namespace CarPartsPatron.Repositories
 {
@@ -37,7 +38,7 @@ namespace CarPartsPatron.Repositories
                             Drivetrain = reader.GetString(reader.GetOrdinal("Drivetrain")),
                             Transmission = reader.GetString(reader.GetOrdinal("Transmission")),
                             Color = reader.GetString(reader.GetOrdinal("Color")),
-                            PhotoUrl = reader.GetString(reader.GetOrdinal("PhotoUrl")),
+                            PhotoUrl = DbUtils.GetNullableString(reader, ("PhotoUrl"))
                         });
                     }
 
@@ -77,7 +78,7 @@ namespace CarPartsPatron.Repositories
                             Drivetrain = reader.GetString(reader.GetOrdinal("Drivetrain")),
                             Transmission = reader.GetString(reader.GetOrdinal("Transmission")),
                             Color = reader.GetString(reader.GetOrdinal("Color")),
-                            PhotoUrl = reader.GetString(reader.GetOrdinal("PhotoUrl")),
+                            PhotoUrl = DbUtils.GetNullableString(reader, ("PhotoUrl")),
                         };
 
 
@@ -113,7 +114,7 @@ namespace CarPartsPatron.Repositories
                     cmd.Parameters.AddWithValue("@drivetrain", car.Drivetrain);
                     cmd.Parameters.AddWithValue("@transmission", car.Transmission);
                     cmd.Parameters.AddWithValue("@color", car.Color);
-                    cmd.Parameters.AddWithValue("@photoUrl", car.PhotoUrl);
+                    cmd.Parameters.AddWithValue("@photoUrl", DbUtils.ValueOrDBNull(car.PhotoUrl));
                     ;
 
                     int id = (int)cmd.ExecuteScalar();
@@ -170,7 +171,7 @@ namespace CarPartsPatron.Repositories
                     cmd.Parameters.AddWithValue("@drivetrain", car.Drivetrain);
                     cmd.Parameters.AddWithValue("@transmission", car.Transmission);
                     cmd.Parameters.AddWithValue("@color", car.Color);
-                    cmd.Parameters.AddWithValue("@photoUrl", car.PhotoUrl);
+                    cmd.Parameters.AddWithValue("@photoUrl", DbUtils.ValueOrDBNull(car.PhotoUrl));
                     cmd.Parameters.AddWithValue("@id", car.Id);
                     cmd.ExecuteNonQuery();
                 }
