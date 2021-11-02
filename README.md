@@ -1,3 +1,3 @@
-# FirebaseMVC
+# CarPartsPatron
 
-A simple example of using Firebase Authentication in an MVC app
+I created this app for car enthusiasts to keep track of parts they have or would like to add, also the part setup notes
