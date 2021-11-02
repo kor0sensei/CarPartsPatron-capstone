@@ -35,7 +35,7 @@ namespace CarPartsPatron.Repositories
                             Brand = reader.GetString(reader.GetOrdinal("Brand")),
                             PartType = reader.GetString(reader.GetOrdinal("PartType")),
                             Price = DbUtils.GetNullableInt(reader, "Price"),
-                            PhotoUrl = DbUtils.GetNullableString(reader, "PhotoUrl"),
+                            PhotoUrl = DbUtils.GetNullableString(reader, ("PhotoUrl")),
                             DateInstalled = DbUtils.GetNullableDateTime(reader, "DateInstalled"),
                             Car = new Car
                             {
@@ -75,8 +75,8 @@ namespace CarPartsPatron.Repositories
                             CarId = reader.GetInt32(reader.GetOrdinal("CarId")),
                             Brand = reader.GetString(reader.GetOrdinal("Brand")),
                             PartType = reader.GetString(reader.GetOrdinal("PartType")),
-                            Price = DbUtils.GetNullableInt(reader,"Price"),
-                            PhotoUrl = DbUtils.GetNullableString(reader,("PhotoUrl")),
+                            Price = DbUtils.GetNullableInt(reader, "Price"),
+                            PhotoUrl = DbUtils.GetNullableString(reader, ("PhotoUrl")),
                             DateInstalled = DbUtils.GetNullableDateTime(reader, "DateInstalled"),
                         };
 
