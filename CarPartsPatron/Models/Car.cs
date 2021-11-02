@@ -14,6 +14,8 @@ namespace CarPartsPatron.Models
         public int UserProfileId { get; set; }
         public UserProfile UserProfile { get; set; }
         [Required]
+        public int Year { get; set; }
+        [Required]
         public string Manufacturer { get; set; }
         [Required]
         public string Model { get; set; }

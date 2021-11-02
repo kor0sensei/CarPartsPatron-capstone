@@ -8,43 +8,6 @@ namespace CarPartsPatron.Repositories
     public class PartRepository : BaseRepository, IPartRepository
     {
         public PartRepository(IConfiguration config) : base(config) { }
-        public List<Part> GetAllParts()
-        {
-            using (var conn = Connection)
-            {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"SELECT Part.id, CarId, Brand, PartType, Price, Part.PhotoUrl, DateInstalled, Car.Model FROM Part
-                    JOIN Car ON Part.CarId = Car.Id";
-                    var reader = cmd.ExecuteReader();
-
-                    var parts = new List<Part>();
-
-                    while (reader.Read())
-                    {
-                        parts.Add(new Part()
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            CarId = reader.GetInt32(reader.GetOrdinal("CarId")),
-                            Brand = reader.GetString(reader.GetOrdinal("Brand")),
-                            PartType = reader.GetString(reader.GetOrdinal("PartType")),
-                            Price = DbUtils.GetNullableInt(reader,"Price"),
-                            PhotoUrl = DbUtils.GetNullableString(reader,"PhotoUrl"),
-                            DateInstalled = DbUtils.GetNullableDateTime(reader,"DateInstalled"),
-                            Car = new Car
-                            {
-                                Model = reader.GetString(reader.GetOrdinal("Model"))
-                            }
-                        });
-                    }
-
-                    reader.Close();
-
-                    return parts;
-                }
-            }
-        }
         public List<Part> GetAllUserParts(int userProfileId)
         {
             using (var conn = Connection)
@@ -99,7 +62,7 @@ namespace CarPartsPatron.Repositories
                        FROM Part
                        LEFT JOIN Car 
                        ON Part.CarId = Car.id
-                       WHERE CarId = Car.Id";
+                       WHERE Part.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
                     var reader = cmd.ExecuteReader();
@@ -192,7 +155,6 @@ namespace CarPartsPatron.Repositories
                     cmd.CommandText = @"
                             UPDATE Part
                             SET 
-                                CarId = @carId,
                                 Brand = @brand,
                                 PartType = @partType,
                                 Price = @price,
@@ -200,7 +162,6 @@ namespace CarPartsPatron.Repositories
                                 DateInstalled = @dateInstalled
                             WHERE Id = @id";
 
-                    cmd.Parameters.AddWithValue("@carId", part.CarId);
                     cmd.Parameters.AddWithValue("@brand", part.Brand);
                     cmd.Parameters.AddWithValue("@partType", part.PartType);
                     cmd.Parameters.AddWithValue("@price", DbUtils.ValueOrDBNull(part.Price));

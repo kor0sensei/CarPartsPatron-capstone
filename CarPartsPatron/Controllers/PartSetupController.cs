@@ -25,7 +25,8 @@ namespace CarPartsPatron.Controllers
         }
         public ActionResult Create()
         {
-            var parts = _partRepository.GetAllParts();
+            int userProfileId = GetCurrentUserProfileId();
+            var parts = _partRepository.GetAllUserParts(userProfileId);
             var vm = new PartSetupCreateViewModel
             {
                 PartOptions = parts

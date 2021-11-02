@@ -1,5 +1,4 @@
 ﻿@model CarPartsPatron.Models.PartSetup
-@*@model CarPartsPatron.Models.ViewModels.PartSetupEditViewModel*@
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,21 +12,6 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="PartId" class="control-label"></label>
-                <input asp-for="PartId" class="form-control" />
-                <span asp-validation-for="PartId" class="text-danger"></span>
-            </div>
-            @*<div class="form-group">
-                    <label asp-for="PartSetup.PartId" class="control-label"></label>
-                    <select asp-for="PartSetup.PartId" class="form-control">
-                        @foreach (var part in Model.PartOptions)
-                        {
-                            <option value="@part.Id">@part.PartType</option>
-                        }
-                    </select>
-                    <span asp-validation-for="PartSetup.PartId" class="text-danger"></span>
-                </div>*@
             <div class="form-group">
                 <label asp-for="SetupNote" class="control-label"></label>
                 <input asp-for="SetupNote" class="form-control" />
