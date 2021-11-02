@@ -8,40 +8,6 @@ namespace CarPartsPatron.Repositories
     public class PartSetupRepository : BaseRepository, IPartSetupRepository
     {
         public PartSetupRepository(IConfiguration config) : base(config) { }
-        public List<PartSetup> GetAllPartSetups()
-        {
-            using (var conn = Connection)
-            {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"SELECT PartSetup.id, PartId, SetupNote, CreateDateTime, Part.PartType FROM PartSetup 
-                                       JOIN Part ON PartSetup.PartId = Part.Id";
-                    var reader = cmd.ExecuteReader();
-
-                    var partSetups = new List<PartSetup>();
-
-                    while (reader.Read())
-                    {
-                        partSetups.Add(new PartSetup()
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            PartId = reader.GetInt32(reader.GetOrdinal("partId")),
-                            SetupNote = reader.GetString(reader.GetOrdinal("SetupNote")),
-                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                            Part = new Part
-                            {
-                                PartType = reader.GetString(reader.GetOrdinal("PartType"))
-                            }
-                        });
-                    }
-
-                    reader.Close();
-
-                    return partSetups;
-                }
-            }
-        }
         public List<PartSetup> GetAllUserPartSetups(int userProfileId)
         {
             using (var conn = Connection)
@@ -73,6 +39,10 @@ namespace CarPartsPatron.Repositories
                             {
                                 PartType = reader.GetString(reader.GetOrdinal("PartType"))
                             }
+                            //Car = new Car
+                            //{
+                            //    Model = reader.GetString(reader.GetOrdinal("Model"))
+                            //}
                         });
                     }
 
@@ -94,7 +64,7 @@ namespace CarPartsPatron.Repositories
                        FROM PartSetup
                        LEFT JOIN Part 
                        ON PartSetup.PartId = Part.id
-                       WHERE PartId = Part.id";
+                       WHERE PartSetup.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
                     var reader = cmd.ExecuteReader();
@@ -160,11 +130,9 @@ namespace CarPartsPatron.Repositories
                     cmd.CommandText = @"
                             UPDATE PartSetup
                             SET 
-                                PartId = @partId,
                                 SetupNote = @setupNote
                             WHERE Id = @id";
 
-                    cmd.Parameters.AddWithValue("@partId", partSetup.PartId);
                     cmd.Parameters.AddWithValue("@setupNote", partSetup.SetupNote);
                     cmd.Parameters.AddWithValue("@id", partSetup.Id);
                     cmd.ExecuteNonQuery();
