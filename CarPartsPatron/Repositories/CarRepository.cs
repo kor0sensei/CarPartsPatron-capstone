@@ -18,7 +18,8 @@ namespace CarPartsPatron.Repositories
                     cmd.CommandText = @"SELECT Car.id, Year, Manufacturer, Model, Submodel, Engine, Drivetrain, Transmission, Color, PhotoUrl 
                                       FROM Car 
                                       JOIN UserProfile ON UserProfileId = UserProfile.id
-                                      WHERE Car.UserProfileId = @userProfileId";
+                                      WHERE Car.UserProfileId = @userProfileId
+                                      ORDER BY Car.Manufacturer";
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
                     var reader = cmd.ExecuteReader();

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<CarPartsPatron.Models.Part>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Parts";
 }
 
 <h1>Your Parts</h1>
@@ -50,7 +50,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new {id=item.Id}) |
-                @Html.ActionLink("Details", "Details", new {id=item.Id}) |
+                @*@Html.ActionLink("Details", "Details", new {id=item.Id}) |*@
                 @Html.ActionLink("Delete", "Delete", new {id=item.Id})
             </td>
         </tr>

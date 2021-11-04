@@ -11,6 +11,8 @@ namespace CarPartsPatron.Models
         public int Id { get; set; }
         public int PartId { get; set; }
         public Part Part { get; set; }
+        public int CarId { get; set; }
+        public Car Car { get; set; }
         public string SetupNote { get; set; }
         public DateTime CreateDateTime { get; set; }
     }
