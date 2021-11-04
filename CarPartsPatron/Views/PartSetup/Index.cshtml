@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<CarPartsPatron.Models.PartSetup>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Setups";
 }
 
 <h1>Your Setups</h1>
@@ -12,9 +12,9 @@
 <table class="table">
     <thead>
         <tr>
-            @*<th>
+            <th>
                 Car
-            </th>*@
+            </th>
             <th>
                 Part Type
             </th>
@@ -30,9 +30,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            @*<td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Car.Model)
-            </td>*@
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Part.PartType)
             </td>
@@ -44,7 +44,6 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>

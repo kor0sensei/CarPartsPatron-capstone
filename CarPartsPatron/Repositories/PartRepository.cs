@@ -19,7 +19,8 @@ namespace CarPartsPatron.Repositories
                                       FROM Part
                                       JOIN Car ON Part.CarId = Car.Id
                                       JOIN UserProfile ON UserProfileId = UserProfile.id
-                                      WHERE Car.UserProfileId = @userProfileId";
+                                      WHERE Car.UserProfileId = @userProfileId
+                                      ORDER BY Car.Model";
 
                                       cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
                     var reader = cmd.ExecuteReader();

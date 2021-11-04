@@ -15,7 +15,7 @@ namespace CarPartsPatron.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT PartSetup.id, PartId, SetupNote, CreateDateTime, Part.PartType, Car.UserProfileId
+                    cmd.CommandText = @"SELECT PartSetup.id, PartId, SetupNote, CreateDateTime, Part.PartType, Car.Model, Car.UserProfileId
                                       FROM PartSetup 
                                       JOIN Part ON PartSetup.PartId = Part.Id
                                       JOIN Car ON Part.CarId = Car.Id
@@ -38,11 +38,11 @@ namespace CarPartsPatron.Repositories
                             Part = new Part
                             {
                                 PartType = reader.GetString(reader.GetOrdinal("PartType"))
+                            },
+                            Car = new Car
+                            {
+                                Model = reader.GetString(reader.GetOrdinal("Model"))
                             }
-                            //Car = new Car
-                            //{
-                            //    Model = reader.GetString(reader.GetOrdinal("Model"))
-                            //}
                         });
                     }
 
