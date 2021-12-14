@@ -19,9 +19,9 @@ namespace CarPartsPatron.Controllers
         public ActionResult Index()
         {
             int userProfileId = GetCurrentUserProfileId();
-            var parts = _partSetupRepository.GetAllUserPartSetups(userProfileId);
+            var partSetups = _partSetupRepository.GetAllUserPartSetups(userProfileId);
 
-            return View(parts);
+            return View(partSetups);
         }
         public ActionResult Create()
         {
